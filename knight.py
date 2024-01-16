@@ -6,3 +6,16 @@ class Knight(Piece):
         if(isWhite):
             s = "N"
         super().__init__(isWhite, x, y, s)
+    
+    def move(self, board):
+        options = []
+        directions = [(2, 1), (1, 2), (2, -1), (-1, 2), (-2, 1), (1, -2), (-2, -1), (-1, -2)]
+        for direction in directions:
+            x = self.x + direction[0]
+            y = self.y + direction[1]
+            if(x < 0 or y < 0 or x > 7 or y > 7):
+                continue
+            square = board[y][x]
+            if(square == None or square.isWhite != self.isWhite):
+                options.append((y, x))
+        return options
