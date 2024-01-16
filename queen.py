@@ -6,3 +6,7 @@ class Queen(Piece):
         if(isWhite):
             s = "Q"
         super().__init__(isWhite, x, y, s)
+    
+    
+    def moves(self, board):
+        return super().moves(board, directions = [(0, 1), (1, 0), (0, -1), (-1, 0), (-1, 1), (1, -1), (-1, -1), (1, 1)])

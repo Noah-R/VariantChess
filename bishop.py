@@ -6,3 +6,7 @@ class Bishop(Piece):
         if(isWhite):
             s = "B"
         super().__init__(isWhite, x, y, s)
+        
+    
+    def moves(self, board):
+        return super().moves(board, directions = [(-1, 1), (1, -1), (-1, -1), (1, 1)])
