@@ -12,14 +12,14 @@ class Game:
             self.board.append([])
         pieces = [Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook]
         for f in range(8):
-            self.board[0].append(pieces[f](color = "white", x = f, y = 0))
-            self.board[1].append(Pawn(color = "white", x = f, y = 1))
+            self.board[0].append(pieces[f](isWhite = True, x = f, y = 0))
+            self.board[1].append(Pawn(isWhite = True, x = f, y = 1))
             self.board[2].append(None)
             self.board[3].append(None)
             self.board[4].append(None)
             self.board[5].append(None)
-            self.board[6].append(Pawn(color = "black",  x = f, y = 6))
-            self.board[7].append(pieces[f](color = "black", x = f, y = 7))
+            self.board[6].append(Pawn(isWhite = False,  x = f, y = 6))
+            self.board[7].append(pieces[f](isWhite = False, x = f, y = 7))
         self.whiteToMove = True
 
     def __str__(self):

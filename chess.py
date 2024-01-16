@@ -1,3 +1,3 @@
 from game import Game
 
-print(Game())
+game = Game()
