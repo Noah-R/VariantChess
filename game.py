@@ -7,6 +7,7 @@ from king import King
 
 class Game:
     def __init__(self):
+        self.whiteToMove = True
         self.board = []
         for r in range(8):
             self.board.append([])
@@ -20,7 +21,8 @@ class Game:
             self.board[5].append(None)
             self.board[6].append(Pawn(isWhite = False,  x = f, y = 6))
             self.board[7].append(pieces[f](isWhite = False, x = f, y = 7))
-        self.whiteToMove = True
+
+        self.play()
 
     def __str__(self):
         result = ""
@@ -46,16 +48,34 @@ class Game:
         self.whiteToMove = not self.whiteToMove
         return True
 
-    def test(self):
-        command = "start"
-        while(command != "end"):
+    def play(self):
+        prefixes = {"N": Knight, "B": Bishop, "R": Rook, "Q": Queen, "K": King}
+        while(True):
             print(self)
-            command = input("enter command")
-            x = int(input("enter x"))
-            y = int(input("enter y"))
-            if(command == "list"):
-                print(self.board[y][x].listMoves(self.board))
-            elif(command == "move"):
-                targetX = int(input("enter target x"))
-                targetY = int(input("enter target y"))
-                self.move(y, x, targetY, targetX)
+            move = input("enter move\n")
+            if(move == "resign"):
+                break
+
+            piece = Pawn
+            if(move[0] in prefixes):
+                piece = prefixes[move[0]]
+                move = move[1:]
+            
+            #The ASCII code for lowercase 'a' is 97
+            #The ASCIi code for digit '0' is 48
+            targetX = ord(move[-2]) - 97
+            targetY = ord(move[-1]) - 49
+
+            #move will be the file/rank of the piece to move, if it needed to be specified
+            move = move[:-2]
+            move = move.replace("x", "")
+
+            for row in self.board:
+                for spot in row:
+                    if(spot != None
+                       and spot.isWhite == self.whiteToMove
+                       and type(spot) == piece
+                       and (targetY, targetX) in spot.listMoves(self.board)
+                       and (len(move) == 0 or ord(move) - 49 == spot.y or ord(move) - 97 == spot.x)):
+                        self.move(spot.y, spot.x, targetY, targetX)
+                        break
