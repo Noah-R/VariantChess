@@ -21,10 +21,10 @@ class Piece:
                     break
                 square = board[y][x]
                 if(square == None):
-                    options.append((y, x))
+                    options.append((y, x, ""))
                     continue
                 elif(square.isWhite != self.isWhite):
-                    options.append((y, x))
+                    options.append((y, x, ""))
                     break
                 else:
                     break

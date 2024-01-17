@@ -22,6 +22,7 @@ class Game:
             self.board[6].append(Pawn(isWhite = False,  x = f, y = 6))
             self.board[7].append(pieces[f](isWhite = False, x = f, y = 7))
 
+        self.prefixes = {"N": Knight, "B": Bishop, "R": Rook, "Q": Queen, "K": King}
         self.play()
 
     def __str__(self):
@@ -37,29 +38,40 @@ class Game:
             result = row + result
         return result
 
-    def move(self, y, x, targetY, targetX):
+    def move(self, y, x, targetY, targetX, note):
         if(self.board[y][x] == None
            or self.board[y][x].isWhite != self.whiteToMove
-           or (targetY, targetX) not in self.board[y][x].listMoves(self.board)):
+           or (targetY, targetX, note) not in self.board[y][x].listMoves(self.board)):
             return False
         self.board[y][x].placeAt(targetY, targetX)
         self.board[targetY][targetX] = self.board[y][x]
         self.board[y][x] = None
         self.whiteToMove = not self.whiteToMove
+
+        if(note in self.prefixes and not note == "K"):
+            self.board[targetY][targetX] = self.board[targetY][targetX].promote(self.prefixes[note])
+
         return True
 
     def play(self):
-        prefixes = {"N": Knight, "B": Bishop, "R": Rook, "Q": Queen, "K": King}
         while(True):
             print(self)
             move = input("enter move\n")
             if(move == "resign"):
                 break
+            
+            for char in "x+#!?":
+                move = move.replace(char, "")
 
             piece = Pawn
-            if(move[0] in prefixes):
-                piece = prefixes[move[0]]
+            note = ""
+            if(move[0] in self.prefixes):
+                piece = self.prefixes[move[0]]
                 move = move[1:]
+            else:
+                if(move[-2] == "="):
+                    note = move[-1]
+                    move = move[:-2]
             
             #The ASCII code for lowercase 'a' is 97
             #The ASCIi code for digit '0' is 48
@@ -68,14 +80,13 @@ class Game:
 
             #move will be the file/rank of the piece to move, if it needed to be specified
             move = move[:-2]
-            move = move.replace("x", "")
 
             for row in self.board:
                 for spot in row:
                     if(spot != None
                        and spot.isWhite == self.whiteToMove
                        and type(spot) == piece
-                       and (targetY, targetX) in spot.listMoves(self.board)
+                       and ((targetY, targetX, note) in spot.listMoves(self.board))
                        and (len(move) == 0 or ord(move) - 49 == spot.y or ord(move) - 97 == spot.x)):
-                        self.move(spot.y, spot.x, targetY, targetX)
+                        self.move(spot.y, spot.x, targetY, targetX, note)
                         break

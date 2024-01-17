@@ -17,5 +17,5 @@ class Knight(Piece):
                 continue
             square = board[y][x]
             if(square == None or square.isWhite != self.isWhite):
-                options.append((y, x))
+                options.append((y, x, ""))
         return options
