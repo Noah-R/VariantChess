@@ -7,7 +7,7 @@ class Knight(Piece):
             s = "N"
         super().__init__(isWhite, x, y, s)
     
-    def move(self, board):
+    def listMoves(self, board):
         options = []
         directions = [(2, 1), (1, 2), (2, -1), (-1, 2), (-2, 1), (1, -2), (-2, -1), (-1, -2)]
         for direction in directions:

@@ -1,14 +1,17 @@
 class Piece:
     def __init__(self, isWhite = True, x = 0, y = 0, string = ""):
         self.isWhite = isWhite
-        self.x = x
-        self.y = y
         self.string = string
+        self.placeAt(y, x)
+    
+    def placeAt(self, y, x):
+        self.y = y
+        self.x = x
 
     def __str__(self):
         return self.string
     
-    def moves(self, board, directions = []):
+    def listMoves(self, board, directions = []):
         options = []
         for direction in directions:
             for dist in range(1, 8):

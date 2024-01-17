@@ -34,3 +34,28 @@ class Game:
             row += "\n"
             result = row + result
         return result
+
+    def move(self, y, x, targetY, targetX):
+        if(self.board[y][x] == None
+           or self.board[y][x].isWhite != self.whiteToMove
+           or (targetY, targetX) not in self.board[y][x].listMoves(self.board)):
+            return False
+        self.board[y][x].placeAt(targetY, targetX)
+        self.board[targetY][targetX] = self.board[y][x]
+        self.board[y][x] = None
+        self.whiteToMove = not self.whiteToMove
+        return True
+
+    def test(self):
+        command = "start"
+        while(command != "end"):
+            print(self)
+            command = input("enter command")
+            x = int(input("enter x"))
+            y = int(input("enter y"))
+            if(command == "list"):
+                print(self.board[y][x].listMoves(self.board))
+            elif(command == "move"):
+                targetX = int(input("enter target x"))
+                targetY = int(input("enter target y"))
+                self.move(y, x, targetY, targetX)

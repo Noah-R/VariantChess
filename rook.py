@@ -7,5 +7,5 @@ class Rook(Piece):
             s = "R"
         super().__init__(isWhite, x, y, s)
     
-    def moves(self, board):
-        return super().moves(board, directions = [(0, 1), (1, 0), (0, -1), (-1, 0)])
+    def listMoves(self, board):
+        return super().listMoves(board, directions = [(0, 1), (1, 0), (0, -1), (-1, 0)])
