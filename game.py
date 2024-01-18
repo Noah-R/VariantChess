@@ -26,17 +26,20 @@ class Game:
             if(pieces[f] == King):
                 self.whiteKing = self.board[0][-1]
                 self.blackKing = self.board[7][-1]
-
-        self.prefixes = {"N": Knight, "B": Bishop, "R": Rook, "Q": Queen, "K": King}
+        
+            self. prefixes = {"N": Knight, "B": Bishop, "R": Rook, "Q": Queen, "K": King, "P": Pawn}
     
     def copy(self):
         copy = Game()
         copy.whiteToMove = self.whiteToMove
         for y in range(8):
             for x in range(8):
-                copy.board[y][x] = self.board[y][x].copy()
-        copy.whiteKing = copy.board[self.whiteKing[y]][self.whiteKing[x]]
-        copy.blackKing = copy.board[self.blackKing[y]][self.blackKing[x]]
+                if(self.board[y][x] != None):
+                    copy.board[y][x] = self.board[y][x].copy()
+                else:
+                    copy.board[y][x] = None
+        copy.whiteKing = copy.board[self.whiteKing.y][self.whiteKing.x]
+        copy.blackKing = copy.board[self.blackKing.y][self.blackKing.x]
         copy.prefixes = self.prefixes
 
         return copy
@@ -54,12 +57,7 @@ class Game:
             result = row + result
         return result
 
-    def move(self, y, x, targetY, targetX, note):
-        if(self.board[y][x] == None
-           or self.board[y][x].isWhite != self.whiteToMove
-           or (targetY, targetX, note) not in self.board[y][x].listMoves(self.board)):
-            return False
-        
+    def executeMove(self, y, x, targetY, targetX, note):
         self.board[y][x].placeAt(targetY, targetX)
         self.board[targetY][targetX] = self.board[y][x]
         self.board[y][x] = None
@@ -68,6 +66,20 @@ class Game:
         if(note in self.prefixes and not note == "K"):
             self.board[targetY][targetX] = self.board[targetY][targetX].promote(self.prefixes[note])
 
+    def move(self, y, x, targetY, targetX, note):
+        if(self.board[y][x] == None
+           or self.board[y][x].isWhite != self.whiteToMove
+           or (targetY, targetX, note) not in self.board[y][x].listMoves(self.board)):
+            return False
+        
+        testBoard = self.copy()
+        testBoard.executeMove(y, x, targetY, targetX, note)
+        
+        if(testBoard.inCheck(self.whiteToMove)):
+            print("can't, you're in check")
+            return False
+
+        self.executeMove(y, x, targetY, targetX, note)
         return True
 
     def inCheck(self, white):
@@ -85,40 +97,3 @@ class Game:
                             return True
         
         return False
-
-
-    def play(self):
-        while(True):
-            print(self)
-            move = input("enter move\n")
-            if(move == "resign"):
-                break
-            
-            for char in "x+#!?":
-                move = move.replace(char, "")
-
-            piece = Pawn
-            note = ""
-            if(move[0] in self.prefixes):
-                piece = self.prefixes[move[0]]
-                move = move[1:]
-            else:
-                if(move[-2] == "="):
-                    note = move[-1]
-                    move = move[:-2]
-            
-            #The ASCII code for lowercase 'a' is 97
-            #The ASCIi code for digit '0' is 48
-            targetX = ord(move[-2]) - 97
-            targetY = ord(move[-1]) - 49
-
-            #move will be the file/rank of the piece to move, if it needed to be specified
-            move = move[:-2]
-
-            for row in self.board:
-                for spot in row:
-                    if(spot != None
-                       and spot.isWhite == self.whiteToMove
-                       and type(spot) == piece
-                       and (len(move) == 0 or ord(move) - 49 == spot.y or ord(move) - 97 == spot.x)):
-                        self.move(spot.y, spot.x, targetY, targetX, note)
