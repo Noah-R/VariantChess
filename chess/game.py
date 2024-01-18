@@ -76,7 +76,6 @@ class Game:
         testBoard.executeMove(y, x, targetY, targetX, note)
         
         if(testBoard.inCheck(self.whiteToMove)):
-            print("can't, you're in check")
             return False
 
         self.executeMove(y, x, targetY, targetX, note)
