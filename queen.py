@@ -1,11 +1,13 @@
 from piece import Piece
 
 class Queen(Piece):
-    def __init__(self, isWhite = True, x = 0, y = 0):
-        s = "q"
-        if(isWhite):
-            s = "Q"
-        super().__init__(isWhite, x, y, s)
+    def __init__(self, isWhite = True, x = 0, y = 0, moved = False):
+        super().__init__(isWhite, x, y, moved)
+    
+    def __str__(self):
+        if self.isWhite:
+            return "Q"
+        return "q"
     
     
     def listMoves(self, board):

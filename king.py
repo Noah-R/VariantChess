@@ -1,11 +1,13 @@
 from piece import Piece
 
 class King(Piece):
-    def __init__(self, isWhite = True, x = 0, y = 0):
-        s = "k"
-        if(isWhite):
-            s = "K"
-        super().__init__(isWhite, x, y, s)
+    def __init__(self, isWhite = True, x = 0, y = 0, moved = False):
+        super().__init__(isWhite, x, y, moved)
+    
+    def __str__(self):
+        if self.isWhite:
+            return "K"
+        return "k"
 
     def listMoves(self, board):
         directions = [(0, 1), (1, 0), (0, -1), (-1, 0), (-1, 1), (1, -1), (-1, -1), (1, 1)]

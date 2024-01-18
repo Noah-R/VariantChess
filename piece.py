@@ -1,18 +1,16 @@
 class Piece:
-    def __init__(self, isWhite = True, x = 0, y = 0, string = ""):
+    def __init__(self, isWhite = True, x = 0, y = 0, moved = False):
         self.isWhite = isWhite
-        self.string = string
+        self.moved = moved
         self.placeAt(y, x)
     
     def placeAt(self, y, x):
         self.y = y
         self.x = x
+        self.moved = True
     
     def copy(self):
-        return type(self)(self.isWhite, self.x, self.y)
-
-    def __str__(self):
-        return self.string
+        return type(self)(self.isWhite, self.x, self.y, self.moved)
     
     def listMoves(self, board, directions = []):
         options = []

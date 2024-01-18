@@ -1,11 +1,13 @@
 from piece import Piece
 
 class Pawn(Piece):
-    def __init__(self, isWhite = True, x = 0, y = 0):
-        s = "p"
-        if(isWhite):
-            s = "P"
-        super().__init__(isWhite, x, y, s)
+    def __init__(self, isWhite = True, x = 0, y = 0, moved = False):
+        super().__init__(isWhite, x, y, moved)
+    
+    def __str__(self):
+        if self.isWhite:
+            return "P"
+        return "p"
     
     def promote(self, pieceType):
         return pieceType(self.isWhite, self.x, self.y)
