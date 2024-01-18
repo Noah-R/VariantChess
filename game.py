@@ -35,6 +35,8 @@ class Game:
         for y in range(8):
             for x in range(8):
                 copy.board[y][x] = self.board[y][x].copy()
+        copy.whiteKing = copy.board[self.whiteKing[y]][self.whiteKing[x]]
+        copy.blackKing = copy.board[self.blackKing[y]][self.blackKing[x]]
         copy.prefixes = self.prefixes
 
         return copy
@@ -57,6 +59,7 @@ class Game:
            or self.board[y][x].isWhite != self.whiteToMove
            or (targetY, targetX, note) not in self.board[y][x].listMoves(self.board)):
             return False
+        
         self.board[y][x].placeAt(targetY, targetX)
         self.board[targetY][targetX] = self.board[y][x]
         self.board[y][x] = None
