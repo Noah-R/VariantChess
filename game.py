@@ -8,6 +8,8 @@ from king import King
 class Game:
     def __init__(self):
         self.whiteToMove = True
+        self.whiteKing = None
+        self.blackKing = None
         self.board = []
         for r in range(8):
             self.board.append([])
@@ -21,9 +23,21 @@ class Game:
             self.board[5].append(None)
             self.board[6].append(Pawn(isWhite = False,  x = f, y = 6))
             self.board[7].append(pieces[f](isWhite = False, x = f, y = 7))
+            if(pieces[f] == King):
+                self.whiteKing = self.board[0][-1]
+                self.blackKing = self.board[7][-1]
 
         self.prefixes = {"N": Knight, "B": Bishop, "R": Rook, "Q": Queen, "K": King}
-        self.play()
+    
+    def copy(self):
+        copy = Game()
+        copy.whiteToMove = self.whiteToMove
+        for y in range(8):
+            for x in range(8):
+                copy.board[y][x] = self.board[y][x].copy()
+        copy.prefixes = self.prefixes
+
+        return copy
 
     def __str__(self):
         result = ""
@@ -52,6 +66,23 @@ class Game:
             self.board[targetY][targetX] = self.board[targetY][targetX].promote(self.prefixes[note])
 
         return True
+
+    def inCheck(self, white):
+        king = self.blackKing
+        if(white):
+            king = self.whiteKing
+        kingCaptures = [(king.y, king.x, ""), (king.y, king.x, "Q")]
+        
+        for row in self.board:
+            for piece in row:
+                if(not piece == None and piece.isWhite != white):
+                    moves = piece.listMoves(self.board)
+                    for capture in kingCaptures:
+                        if(capture in moves):
+                            return True
+        
+        return False
+
 
     def play(self):
         while(True):
@@ -86,7 +117,5 @@ class Game:
                     if(spot != None
                        and spot.isWhite == self.whiteToMove
                        and type(spot) == piece
-                       and ((targetY, targetX, note) in spot.listMoves(self.board))
                        and (len(move) == 0 or ord(move) - 49 == spot.y or ord(move) - 97 == spot.x)):
                         self.move(spot.y, spot.x, targetY, targetX, note)
-                        break

@@ -7,6 +7,9 @@ class Piece:
     def placeAt(self, y, x):
         self.y = y
         self.x = x
+    
+    def copy(self):
+        return type(self)(self.isWhite, self.x, self.y)
 
     def __str__(self):
         return self.string
