@@ -29,6 +29,11 @@ class Game:
         
             self. prefixes = {"N": Knight, "B": Bishop, "R": Rook, "Q": Queen, "K": King, "P": Pawn}
     
+    def status(self):
+        if(self.whiteToMove):
+            return "White to play"
+        return "Black to play"
+    
     def copy(self):
         copy = Game()
         copy.whiteToMove = self.whiteToMove
@@ -73,13 +78,53 @@ class Game:
             return False
         
         testBoard = self.copy()
-        testBoard.executeMove(y, x, targetY, targetX, note)
-        
-        if(testBoard.inCheck(self.whiteToMove)):
-            return False
 
-        self.executeMove(y, x, targetY, targetX, note)
-        return True
+        if(note == "O-O"):
+            counter = x
+            while(counter < targetX):
+                if(testBoard.inCheck(self.whiteToMove)):
+                    return False
+                testBoard.executeMove(y, counter, targetY, counter + 1, note)
+                counter += 1
+            while(counter < 7):
+                counter += 1
+                if(type(testBoard.board[y][counter]) == Rook):
+                    testBoard.executeMove(y, counter, targetY, targetX - 1, note)
+                    if(testBoard.inCheck(self.whiteToMove)):
+                        return False
+                    break
+                
+            self.executeMove(y, x, targetY, targetX, note)
+            self.executeMove(y, counter, targetY, targetX - 1, note)
+            return True
+
+        elif(note == "O-O-O"):
+            counter = x
+            while(counter > targetX):
+                if(testBoard.inCheck(self.whiteToMove)):
+                    return False
+                testBoard.executeMove(y, counter, targetY, counter - 1, note)
+                counter -= 1
+            while(counter > 0):
+                counter -= 1
+                if(type(testBoard.board[y][counter]) == Rook):
+                    testBoard.executeMove(y, counter, targetY, targetX + 1, note)
+                    if(testBoard.inCheck(self.whiteToMove)):
+                        return False
+                    break
+                
+            self.executeMove(y, x, targetY, targetX, note)
+            self.executeMove(y, counter, targetY, targetX + 1, note)
+            return True
+
+        else:
+            testBoard.executeMove(y, x, targetY, targetX, note)
+            
+            if(testBoard.inCheck(self.whiteToMove)):
+                return False
+
+            self.executeMove(y, x, targetY, targetX, note)
+            return True
 
     def inCheck(self, white):
         king = self.blackKing

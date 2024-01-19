@@ -1,8 +1,8 @@
 class Piece:
     def __init__(self, isWhite = True, x = 0, y = 0, moved = False):
         self.isWhite = isWhite
-        self.moved = moved
         self.placeAt(y, x)
+        self.moved = moved
     
     def placeAt(self, y, x):
         self.y = y
