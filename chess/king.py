@@ -22,13 +22,23 @@ class King(Piece):
                     options.append((y, x, ""))
         
         if(not self.moved):
+            #(direction of king movement, where to stop looking for the rook, where to put the king, notation of move)
             castles = [(1, 8, 6, "O-O"), (-1, -1, 2, "O-O-O")]
             for castle in castles:
+                foundRook = False
+                reachedKingSpot = False
                 for x in range(self.x + castle[0], castle[1], castle[0]):
                     if(board[self.y][x] != None):
                         piece = board[self.y][x]
-                        if(type(piece) == Rook and not piece.moved and piece.isWhite == self.isWhite):
-                            options.append((self.y, castle[2], castle[3]))
-                        break
+                        if(type(piece) == Rook and not piece.moved and piece.isWhite == self.isWhite and not foundRook):
+                            foundRook = True
+                        elif(not foundRook or not reachedKingSpot):
+                            foundRook = False
+                            break
+                    if(x == castle[2]):
+                        reachedKingSpot = True
+                
+                if(foundRook):
+                    options.append((self.y, castle[2], castle[3]))
             
         return options

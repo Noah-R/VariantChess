@@ -66,7 +66,6 @@ class Game:
         self.board[y][x].placeAt(targetY, targetX)
         self.board[targetY][targetX] = self.board[y][x]
         self.board[y][x] = None
-        self.whiteToMove = not self.whiteToMove
 
         if(note in self.prefixes and not note == "K"):
             self.board[targetY][targetX] = self.board[targetY][targetX].promote(self.prefixes[note])
@@ -79,42 +78,31 @@ class Game:
         
         testBoard = self.copy()
 
-        if(note == "O-O"):
+        if(note in ["O-O", "O-O-O"]):
+            if(note == "O-O"):
+                direction = 1
+                end = 7
+            else:
+                direction = -1
+                end = 7
+            
             counter = x
             while(counter < targetX):
                 if(testBoard.inCheck(self.whiteToMove)):
                     return False
-                testBoard.executeMove(y, counter, targetY, counter + 1, note)
-                counter += 1
-            while(counter < 7):
-                counter += 1
+                testBoard.executeMove(y, counter, targetY, counter + direction, note)
+                counter += direction
+            while(counter != end):
+                counter += direction
                 if(type(testBoard.board[y][counter]) == Rook):
-                    testBoard.executeMove(y, counter, targetY, targetX - 1, note)
+                    testBoard.executeMove(y, counter, targetY, targetX - direction, note)
                     if(testBoard.inCheck(self.whiteToMove)):
                         return False
                     break
                 
             self.executeMove(y, x, targetY, targetX, note)
-            self.executeMove(y, counter, targetY, targetX - 1, note)
-            return True
-
-        elif(note == "O-O-O"):
-            counter = x
-            while(counter > targetX):
-                if(testBoard.inCheck(self.whiteToMove)):
-                    return False
-                testBoard.executeMove(y, counter, targetY, counter - 1, note)
-                counter -= 1
-            while(counter > 0):
-                counter -= 1
-                if(type(testBoard.board[y][counter]) == Rook):
-                    testBoard.executeMove(y, counter, targetY, targetX + 1, note)
-                    if(testBoard.inCheck(self.whiteToMove)):
-                        return False
-                    break
-                
-            self.executeMove(y, x, targetY, targetX, note)
-            self.executeMove(y, counter, targetY, targetX + 1, note)
+            self.executeMove(y, counter, targetY, targetX - direction, note)
+            self.whiteToMove = not self.whiteToMove
             return True
 
         else:
@@ -124,6 +112,7 @@ class Game:
                 return False
 
             self.executeMove(y, x, targetY, targetX, note)
+            self.whiteToMove = not self.whiteToMove
             return True
 
     def inCheck(self, white):
