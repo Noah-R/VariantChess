@@ -4,7 +4,6 @@ game = Game()
 while(True):
     moved = False
     print(game)
-    print(game.status())
     move = input()
 
     if(move == "resign"):

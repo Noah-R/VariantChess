@@ -8,6 +8,7 @@ from king import King
 class Game:
     def __init__(self):
         self.whiteToMove = True
+        self.status = "White to play"
         self.whiteKing = None
         self.blackKing = None
         self.board = []
@@ -29,10 +30,11 @@ class Game:
         
             self. prefixes = {"N": Knight, "B": Bishop, "R": Rook, "Q": Queen, "K": King, "P": Pawn}
     
-    def status(self):
+    def checkStatus(self):
         if(self.whiteToMove):
-            return "White to play"
-        return "Black to play"
+            self.status = "White to play"
+        else:
+            self.status = "Black to play"
     
     def copy(self):
         copy = Game()
@@ -60,7 +62,7 @@ class Game:
                     row += str(piece)
             row += "\n"
             result = row + result
-        return result
+        return result + "\n" + self.status
 
     def executeMove(self, y, x, targetY, targetX, note):
         self.board[y][x].placeAt(targetY, targetX)
@@ -103,6 +105,7 @@ class Game:
             self.executeMove(y, x, targetY, targetX, note)
             self.executeMove(y, counter, targetY, targetX - direction, note)
             self.whiteToMove = not self.whiteToMove
+            self.checkStatus()
             return True
 
         else:
@@ -113,6 +116,7 @@ class Game:
 
             self.executeMove(y, x, targetY, targetX, note)
             self.whiteToMove = not self.whiteToMove
+            self.checkStatus()
             return True
 
     def inCheck(self, white):
