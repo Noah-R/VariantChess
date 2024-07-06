@@ -84,7 +84,7 @@ class Game:
         testBoard = self.copy()
 
         if(note in ["O-O", "O-O-O"]):
-            if(testBoard.inCheck(self.whiteToMove)):
+            if(testBoard.inCheck()):
                 return False
             
             if(note == "O-O"):
@@ -95,13 +95,13 @@ class Game:
                 rookSpot = 0
             
             testBoard.placePiece(y, x, y, x + direction)
-            if(testBoard.inCheck(self.whiteToMove)):
+            if(testBoard.inCheck()):
                 return False
             testBoard = self.copy()
             
             testBoard.placePiece(y, x, targetY, targetX)
             testBoard.placePiece(y, rookSpot, targetY, targetX - direction)
-            if(testBoard.inCheck(self.whiteToMove)):
+            if(testBoard.inCheck()):
                 return False
         
             self.placePiece(y, x, targetY, targetX)
@@ -114,7 +114,7 @@ class Game:
         else:
             testBoard.placePiece(y, x, targetY, targetX, note)
             
-            if(testBoard.inCheck(self.whiteToMove)):
+            if(testBoard.inCheck()):
                 return False
 
             self.placePiece(y, x, targetY, targetX, note)
@@ -123,15 +123,15 @@ class Game:
                 self.checkStatus()
             return True
 
-    def inCheck(self, white):
+    def inCheck(self):
         king = self.blackKing
-        if(white):
+        if(self.whiteToMove):
             king = self.whiteKing
         kingCaptures = [(king.y, king.x, ""), (king.y, king.x, "Q")]
         
         for row in self.board:
             for piece in row:
-                if(not piece == None and piece.isWhite != white):
+                if(not piece == None and piece.isWhite != self.whiteToMove):
                     moves = piece.listMoves(self.board)
                     for capture in kingCaptures:
                         if(capture in moves):
@@ -149,7 +149,7 @@ class Game:
                         if(testBoard.move(piece.y, piece.x, move[0], move[1], move[2], checkingForMate = True)):
                             return False
         
-        if self.inCheck(self.whiteToMove):
+        if self.inCheck():
             if(self.whiteToMove):
                 return "Black wins - Checkmate"
             return "White wins - Checkmate"

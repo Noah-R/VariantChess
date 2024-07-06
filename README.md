@@ -2,8 +2,8 @@
 A chess server for variants invented by me. Under active development.
 
 Currently working on implementing chess in Python. To do:
-
-    does inCheck need to accept player to check, or can it derive from game state if the test boards properly track it?
+    
+    En Passant
     
     Resignation
     
@@ -14,8 +14,6 @@ Currently working on implementing chess in Python. To do:
     Threefold Repetition
     
     50 Move Rule
-    
-    En Passant
     
     https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
     
