@@ -10,5 +10,5 @@ class Bishop(Piece):
         return "b"
         
     
-    def listMoves(self, board):
-        return super().listMoves(board, directions = [(-1, 1), (1, -1), (-1, -1), (1, 1)])
+    def listMoves(self, game):
+        return super().listMoves(game, directions = [(-1, 1), (1, -1), (-1, -1), (1, 1)])

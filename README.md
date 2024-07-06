@@ -3,8 +3,6 @@ A chess server for variants invented by me. Under active development.
 
 Currently working on implementing chess in Python. To do:
     
-    En Passant
-    
     Resignation
     
     Draw by Agreement

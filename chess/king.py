@@ -10,14 +10,14 @@ class King(Piece):
             return "K"
         return "k"
 
-    def listMoves(self, board):
+    def listMoves(self, game):
         directions = [(0, 1), (1, 0), (0, -1), (-1, 0), (-1, 1), (1, -1), (-1, -1), (1, 1)]
         options = []
         for direction in directions:
             x = self.x + direction[0]
             y = self.y + direction[1]
             if(x > -1 and y > -1 and x < 8 and y < 8):
-                square = board[y][x]
+                square = game.board[y][x]
                 if(square == None or square.isWhite != self.isWhite):
                     options.append((y, x, ""))
         
@@ -27,11 +27,11 @@ class King(Piece):
                 canCastle = True
                 
                 for x in range(self.x + castle["direction"], castle["rook"], castle["direction"]):
-                    if(board[self.y][x] != None):
+                    if(game.board[self.y][x] != None):
                         canCastle = False
                         break
                 
-                rookSpot = board[self.y][castle["rook"]]
+                rookSpot = game.board[self.y][castle["rook"]]
                 if(type(rookSpot) != Rook or rookSpot.hasMoved or rookSpot.isWhite != self.isWhite):
                     canCastle = False
 

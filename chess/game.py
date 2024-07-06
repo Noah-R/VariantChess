@@ -11,6 +11,7 @@ class Game:
         self.status = "White to play"
         self.whiteKing = None
         self.blackKing = None
+        self.ep_square = None
         self.board = []
         for r in range(8):
             self.board.append([])
@@ -50,6 +51,7 @@ class Game:
                     copy.board[y][x] = None
         copy.whiteKing = copy.board[self.whiteKing.y][self.whiteKing.x]
         copy.blackKing = copy.board[self.blackKing.y][self.blackKing.x]
+        copy.ep_square = self.ep_square
         copy.prefixes = self.prefixes
 
         return copy
@@ -67,18 +69,33 @@ class Game:
             result = row + result
         return result + "\n" + self.status
 
-    def placePiece(self, y, x, targetY, targetX, promoteTo = None):
+    def placePiece(self, y, x, targetY, targetX, note = None):
         self.board[y][x].placeAt(targetY, targetX)
         self.board[targetY][targetX] = self.board[y][x]
         self.board[y][x] = None
 
-        if(promoteTo in self.prefixes and not promoteTo == "K"):
-            self.board[targetY][targetX] = self.board[targetY][targetX].promote(self.prefixes[promoteTo])
+        if(note in self.prefixes and not note == "K"):
+            self.board[targetY][targetX] = self.board[targetY][targetX].promote(self.prefixes[note])
+        
+        if(note == "ep"):
+            if(targetY == 3):
+                self.ep_square = (2, x)
+            if(targetY == 4):
+                self.ep_square = (5, x)
+            
+            if(targetY == 2):
+                self.board[3][targetX] = None
+                self.ep_square = None
+            if(targetY == 5):
+                self.board[4][targetX] = None
+                self.ep_square = None
+        else:
+            self.ep_square = None
 
     def move(self, y, x, targetY, targetX, note, checkingForMate = False):
         if(self.board[y][x] == None
            or self.board[y][x].isWhite != self.whiteToMove
-           or (targetY, targetX, note) not in self.board[y][x].listMoves(self.board)):
+           or (targetY, targetX, note) not in self.board[y][x].listMoves(self)):
             return False
         
         testBoard = self.copy()
@@ -132,7 +149,7 @@ class Game:
         for row in self.board:
             for piece in row:
                 if(not piece == None and piece.isWhite != self.whiteToMove):
-                    moves = piece.listMoves(self.board)
+                    moves = piece.listMoves(self)
                     for capture in kingCaptures:
                         if(capture in moves):
                             return True
@@ -143,7 +160,7 @@ class Game:
         for row in self.board:
             for piece in row:
                 if(not piece == None and piece.isWhite == self.whiteToMove):
-                    moves = piece.listMoves(self.board)
+                    moves = piece.listMoves(self)
                     for move in moves:
                         testBoard = self.copy()
                         if(testBoard.move(piece.y, piece.x, move[0], move[1], move[2], checkingForMate = True)):

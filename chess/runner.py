@@ -54,5 +54,5 @@ while(True):
                     and spot.isWhite == game.whiteToMove
                     and type(spot) == piece
                     and (len(move) == 0 or ord(move) - 49 == spot.y or ord(move) - 97 == spot.x)):
-                    if(game.move(spot.y, spot.x, targetY, targetX, note)):
+                    if(game.move(spot.y, spot.x, targetY, targetX, note) or game.move(spot.y, spot.x, targetY, targetX, "ep")):
                         moved = True

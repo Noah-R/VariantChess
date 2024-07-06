@@ -10,5 +10,5 @@ class Queen(Piece):
         return "q"
     
     
-    def listMoves(self, board):
-        return super().listMoves(board, directions = [(0, 1), (1, 0), (0, -1), (-1, 0), (-1, 1), (1, -1), (-1, -1), (1, 1)])
+    def listMoves(self, game):
+        return super().listMoves(game, directions = [(0, 1), (1, 0), (0, -1), (-1, 0), (-1, 1), (1, -1), (-1, -1), (1, 1)])

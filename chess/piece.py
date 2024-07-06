@@ -12,7 +12,7 @@ class Piece:
     def copy(self):
         return type(self)(self.isWhite, self.x, self.y, self.hasMoved)
     
-    def listMoves(self, board, directions = []):
+    def listMoves(self, game, directions = []):
         options = []
         for direction in directions:
             for dist in range(1, 8):
@@ -20,7 +20,7 @@ class Piece:
                 y = self.y + direction[1]*dist
                 if(x < 0 or y < 0 or x > 7 or y > 7):
                     break
-                square = board[y][x]
+                square = game.board[y][x]
                 if(square == None):
                     options.append((y, x, ""))
                     continue

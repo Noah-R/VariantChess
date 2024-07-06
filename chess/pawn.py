@@ -12,7 +12,7 @@ class Pawn(Piece):
     def promote(self, pieceType):
         return pieceType(self.isWhite, self.x, self.y)
 
-    def listMoves(self, board):
+    def listMoves(self, game):
         options = []
         direction = 1
         if(not self.isWhite):
@@ -20,7 +20,7 @@ class Pawn(Piece):
         
         x = self.x
         y = self.y + direction
-        square = board[y][x]
+        square = game.board[y][x]
         if(square == None):
             if(y == 0 or y == 7):
                 options.append((y, x, "Q"))
@@ -31,14 +31,14 @@ class Pawn(Piece):
                 options.append((y, x, ""))
             if((self.isWhite and self.y == 1) or (not self.isWhite and self.y == 6)):
                 y += direction
-                square = board[y][x]
+                square = game.board[y][x]
                 if(square == None):
-                    options.append((y, x, ""))
+                    options.append((y, x, "ep"))
         
         y = self.y + direction
         for x in [self.x + 1, self.x-1]:
             if(x > -1 and x < 8):
-                square = board[y][x]
+                square = game.board[y][x]
                 if(square != None and square.isWhite != self.isWhite):
                     if(y == 0 or y == 7):
                         options.append((y, x, "Q"))
@@ -47,5 +47,8 @@ class Pawn(Piece):
                         options.append((y, x, "N"))
                     else:
                         options.append((y, x, ""))
+                
+                elif(game.ep_square == (y, x)):
+                    options.append((y, x, "ep"))
 
         return options

@@ -9,7 +9,7 @@ class Knight(Piece):
             return "N"
         return "n"
     
-    def listMoves(self, board):
+    def listMoves(self, game):
         options = []
         directions = [(2, 1), (1, 2), (2, -1), (-1, 2), (-2, 1), (1, -2), (-2, -1), (-1, -2)]
         for direction in directions:
@@ -17,7 +17,7 @@ class Knight(Piece):
             y = self.y + direction[1]
             if(x < 0 or y < 0 or x > 7 or y > 7):
                 continue
-            square = board[y][x]
+            square = game.board[y][x]
             if(square == None or square.isWhite != self.isWhite):
                 options.append((y, x, ""))
         return options

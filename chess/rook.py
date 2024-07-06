@@ -9,5 +9,5 @@ class Rook(Piece):
             return "R"
         return "r"
     
-    def listMoves(self, board):
-        return super().listMoves(board, directions = [(0, 1), (1, 0), (0, -1), (-1, 0)])
+    def listMoves(self, game):
+        return super().listMoves(game, directions = [(0, 1), (1, 0), (0, -1), (-1, 0)])
