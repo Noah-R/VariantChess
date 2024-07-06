@@ -22,23 +22,20 @@ class King(Piece):
                     options.append((y, x, ""))
         
         if(not self.hasMoved):
-            #(direction of king movement, where to stop looking for the rook, where to put the king, notation of move)
-            castles = [(1, 8, 6, "O-O"), (-1, -1, 2, "O-O-O")]
+            castles = [{"direction": 1, "rook": 7, "kingSpot": 6, "notation": "O-O"}, {"direction": -1, "rook": 0, "kingSpot": 2, "notation": "O-O-O"}]
             for castle in castles:
-                foundRook = False
-                reachedKingSpot = False
-                for x in range(self.x + castle[0], castle[1], castle[0]):
-                    if(board[self.y][x] != None):
-                        piece = board[self.y][x]
-                        if(type(piece) == Rook and not piece.hasMoved and piece.isWhite == self.isWhite and not foundRook):
-                            foundRook = True
-                        elif(not foundRook or not reachedKingSpot):
-                            foundRook = False
-                            break
-                    if(x == castle[2]):
-                        reachedKingSpot = True
+                canCastle = True
                 
-                if(foundRook):
-                    options.append((self.y, castle[2], castle[3]))
+                for x in range(self.x + castle["direction"], castle["rook"], castle["direction"]):
+                    if(board[self.y][x] != None):
+                        canCastle = False
+                        break
+                
+                rookSpot = board[self.y][castle["rook"]]
+                if(type(rookSpot) != Rook or rookSpot.hasMoved or rookSpot.isWhite != self.isWhite):
+                    canCastle = False
+
+                if(canCastle):
+                    options.append((self.y, castle["kingSpot"], castle["notation"]))
             
         return options

@@ -1,13 +1,8 @@
-Cleanup:
-    castling
-    game
-    piece
-    runner?
-
 # VariantChess
 A chess server for variants invented by me. Under active development.
 
 Currently working on implementing chess in Python. To do:
+    Cleanup game/runner
     Checkmate
     Stalemate
     Resignation
