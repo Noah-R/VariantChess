@@ -4,6 +4,7 @@ game = Game()
 while(True):
     moved = False
     print(game)
+    print(game.isMate())
     move = input()
 
     if(move == "resign"):

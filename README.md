@@ -2,6 +2,10 @@
 A chess server for variants invented by me. Under active development.
 
 Currently working on implementing chess in Python. To do:
+
+    isMate recursive issues
+
+    does inCheck need to accept player to check, or can it derive from game state if the test boards properly track it?
     
     Checkmate
     

@@ -133,3 +133,17 @@ class Game:
                             return True
         
         return False
+
+    def isMate(self):
+        for row in self.board:
+            for piece in row:
+                if(not piece == None and piece.isWhite == self.whiteToMove):
+                    moves = piece.listMoves(self.board)
+                    for move in moves:
+                        testBoard = self.copy()
+                        if(testBoard.move(piece.y, piece.x, move[0], move[1], move[2])):
+                            return False
+        
+        if self.inCheck(self.whiteToMove):
+            return "Checkmate"
+        return "Stalemate"
