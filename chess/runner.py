@@ -4,10 +4,13 @@ game = Game()
 while(True):
     moved = False
     print(game)
-    print(game.isMate())
+
+    if(game.status not in ("White to play", "Black to play")):
+        break
+
     move = input()
 
-    if(move == "resign"):
+    if(move == "resign" or move == "draw"):
         break
 
     elif(move == "O-O"):

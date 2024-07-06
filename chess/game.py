@@ -31,7 +31,10 @@ class Game:
             self. prefixes = {"N": Knight, "B": Bishop, "R": Rook, "Q": Queen, "K": King, "P": Pawn}
     
     def checkStatus(self):
-        if(self.whiteToMove):
+        mate = self.isMate()
+        if(mate):
+            self.status = mate
+        elif(self.whiteToMove):
             self.status = "White to play"
         else:
             self.status = "Black to play"
@@ -72,7 +75,7 @@ class Game:
         if(promoteTo in self.prefixes and not promoteTo == "K"):
             self.board[targetY][targetX] = self.board[targetY][targetX].promote(self.prefixes[promoteTo])
 
-    def move(self, y, x, targetY, targetX, note):
+    def move(self, y, x, targetY, targetX, note, checkingForMate = False):
         if(self.board[y][x] == None
            or self.board[y][x].isWhite != self.whiteToMove
            or (targetY, targetX, note) not in self.board[y][x].listMoves(self.board)):
@@ -104,7 +107,8 @@ class Game:
             self.placePiece(y, x, targetY, targetX)
             self.placePiece(y, rookSpot, targetY, targetX - direction)
             self.whiteToMove = not self.whiteToMove
-            self.checkStatus()
+            if(not checkingForMate):
+                self.checkStatus()
             return True
 
         else:
@@ -115,7 +119,8 @@ class Game:
 
             self.placePiece(y, x, targetY, targetX, note)
             self.whiteToMove = not self.whiteToMove
-            self.checkStatus()
+            if(not checkingForMate):
+                self.checkStatus()
             return True
 
     def inCheck(self, white):
@@ -141,9 +146,11 @@ class Game:
                     moves = piece.listMoves(self.board)
                     for move in moves:
                         testBoard = self.copy()
-                        if(testBoard.move(piece.y, piece.x, move[0], move[1], move[2])):
+                        if(testBoard.move(piece.y, piece.x, move[0], move[1], move[2], checkingForMate = True)):
                             return False
         
         if self.inCheck(self.whiteToMove):
-            return "Checkmate"
-        return "Stalemate"
+            if(self.whiteToMove):
+                return "Black wins - Checkmate"
+            return "White wins - Checkmate"
+        return "Draw - Stalemate"
