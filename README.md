@@ -1,3 +1,11 @@
+Cleanup:
+    castling
+    game
+    piece
+    runner?
+rename moved to hasMoved
+todo: https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
+
 # VariantChess
 A chess server for variants invented by me. Under active development.
 
