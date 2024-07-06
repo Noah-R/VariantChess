@@ -1,8 +1,8 @@
 from piece import Piece
 
 class Rook(Piece):
-    def __init__(self, isWhite = True, x = 0, y = 0, moved = False):
-        super().__init__(isWhite, x, y, moved)
+    def __init__(self, isWhite = True, x = 0, y = 0, hasMoved = False):
+        super().__init__(isWhite, x, y, hasMoved)
     
     def __str__(self):
         if self.isWhite:

@@ -2,8 +2,8 @@ from piece import Piece
 from rook import Rook
 
 class King(Piece):
-    def __init__(self, isWhite = True, x = 0, y = 0, moved = False):
-        super().__init__(isWhite, x, y, moved)
+    def __init__(self, isWhite = True, x = 0, y = 0, hasMoved = False):
+        super().__init__(isWhite, x, y, hasMoved)
     
     def __str__(self):
         if self.isWhite:
@@ -21,7 +21,7 @@ class King(Piece):
                 if(square == None or square.isWhite != self.isWhite):
                     options.append((y, x, ""))
         
-        if(not self.moved):
+        if(not self.hasMoved):
             #(direction of king movement, where to stop looking for the rook, where to put the king, notation of move)
             castles = [(1, 8, 6, "O-O"), (-1, -1, 2, "O-O-O")]
             for castle in castles:
@@ -30,7 +30,7 @@ class King(Piece):
                 for x in range(self.x + castle[0], castle[1], castle[0]):
                     if(board[self.y][x] != None):
                         piece = board[self.y][x]
-                        if(type(piece) == Rook and not piece.moved and piece.isWhite == self.isWhite and not foundRook):
+                        if(type(piece) == Rook and not piece.hasMoved and piece.isWhite == self.isWhite and not foundRook):
                             foundRook = True
                         elif(not foundRook or not reachedKingSpot):
                             foundRook = False
