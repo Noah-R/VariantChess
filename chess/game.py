@@ -64,13 +64,13 @@ class Game:
             result = row + result
         return result + "\n" + self.status
 
-    def executeMove(self, y, x, targetY, targetX, note):
+    def placePiece(self, y, x, targetY, targetX, promoteTo = None):
         self.board[y][x].placeAt(targetY, targetX)
         self.board[targetY][targetX] = self.board[y][x]
         self.board[y][x] = None
 
-        if(note in self.prefixes and not note == "K"):
-            self.board[targetY][targetX] = self.board[targetY][targetX].promote(self.prefixes[note])
+        if(promoteTo in self.prefixes and not promoteTo == "K"):
+            self.board[targetY][targetX] = self.board[targetY][targetX].promote(self.prefixes[promoteTo])
 
     def move(self, y, x, targetY, targetX, note):
         if(self.board[y][x] == None
@@ -81,40 +81,39 @@ class Game:
         testBoard = self.copy()
 
         if(note in ["O-O", "O-O-O"]):
+            if(testBoard.inCheck(self.whiteToMove)):
+                return False
+            
             if(note == "O-O"):
                 direction = 1
-                end = 7
+                rookSpot = 7
             else:
                 direction = -1
-                end = 7
+                rookSpot = 0
             
-            counter = x
-            while(counter < targetX):
-                if(testBoard.inCheck(self.whiteToMove)):
-                    return False
-                testBoard.executeMove(y, counter, targetY, counter + direction, note)
-                counter += direction
-            while(counter != end):
-                counter += direction
-                if(type(testBoard.board[y][counter]) == Rook):
-                    testBoard.executeMove(y, counter, targetY, targetX - direction, note)
-                    if(testBoard.inCheck(self.whiteToMove)):
-                        return False
-                    break
-                
-            self.executeMove(y, x, targetY, targetX, note)
-            self.executeMove(y, counter, targetY, targetX - direction, note)
+            testBoard.placePiece(y, x, y, x + direction)
+            if(testBoard.inCheck(self.whiteToMove)):
+                return False
+            testBoard = self.copy()
+            
+            testBoard.placePiece(y, x, targetY, targetX)
+            testBoard.placePiece(y, rookSpot, targetY, targetX - direction)
+            if(testBoard.inCheck(self.whiteToMove)):
+                return False
+        
+            self.placePiece(y, x, targetY, targetX)
+            self.placePiece(y, rookSpot, targetY, targetX - direction)
             self.whiteToMove = not self.whiteToMove
             self.checkStatus()
             return True
 
         else:
-            testBoard.executeMove(y, x, targetY, targetX, note)
+            testBoard.placePiece(y, x, targetY, targetX, note)
             
             if(testBoard.inCheck(self.whiteToMove)):
                 return False
 
-            self.executeMove(y, x, targetY, targetX, note)
+            self.placePiece(y, x, targetY, targetX, note)
             self.whiteToMove = not self.whiteToMove
             self.checkStatus()
             return True
