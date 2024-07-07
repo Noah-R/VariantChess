@@ -3,21 +3,15 @@ A chess server for variants invented by me. Under active development.
 
 Currently working on implementing chess in Python. To do:
     
-    Resignation
-    
-    Draw by Agreement
-    
-    Insufficient Material
-    
     Threefold Repetition
+
+    Insufficient Material
     
     50 Move Rule
     
-    https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
-    
 Room for expansion:
 
-    Formalize notation-based moving(currently runner.py implements it incompletely as a temporary interface)
+    Formalize notation-based moving(currently runner.py uses an incomplete implementation as a temporary interface)
 
         In theory, it's possible that a move in algebraic notation will have to specify both the file and rank of a piece it's moving, ie: Qa2b1
         

@@ -77,20 +77,28 @@ class Game:
         if(note in self.prefixes and not note == "K"):
             self.board[targetY][targetX] = self.board[targetY][targetX].promote(self.prefixes[note])
         
+        self.ep_square = None
         if(note == "ep"):
-            if(targetY == 3):
-                self.ep_square = (2, x)
-            if(targetY == 4):
-                self.ep_square = (5, x)
-            
             if(targetY == 2):
                 self.board[3][targetX] = None
-                self.ep_square = None
-            if(targetY == 5):
+            elif(targetY == 5):
                 self.board[4][targetX] = None
-                self.ep_square = None
-        else:
-            self.ep_square = None
+            
+            else:
+                if(targetX > 0):
+                    ep_pawn = self.board[targetY][targetX-1]
+                    if(ep_pawn != None and type(ep_pawn) == Pawn and ep_pawn.isWhite != self.board[targetY][targetX].isWhite):
+                        if(targetY == 3):
+                            self.ep_square = (2, x)
+                        if(targetY == 4):
+                            self.ep_square = (5, x)
+                if(targetX < 7):
+                    ep_pawn = self.board[targetY][targetX+1]
+                    if(ep_pawn != None and type(ep_pawn) == Pawn and ep_pawn.isWhite != self.board[targetY][targetX].isWhite):
+                        if(targetY == 3):
+                            self.ep_square = (2, x)
+                        if(targetY == 4):
+                            self.ep_square = (5, x)
 
     def move(self, y, x, targetY, targetX, note, checkingForMate = False):
         if(self.board[y][x] == None
@@ -171,3 +179,6 @@ class Game:
                 return "Black wins - Checkmate"
             return "White wins - Checkmate"
         return "Draw - Stalemate"
+
+    def getFEN(forThreefold = False):
+        return ""
