@@ -12,6 +12,8 @@ class Game:
         self.whiteKing = None
         self.blackKing = None
         self.ep_square = None
+        self.halfmove_clock = 0
+        self.fullmove_number = 1
         self.board = []
         for r in range(8):
             self.board.append([])
@@ -52,6 +54,8 @@ class Game:
         copy.whiteKing = copy.board[self.whiteKing.y][self.whiteKing.x]
         copy.blackKing = copy.board[self.blackKing.y][self.blackKing.x]
         copy.ep_square = self.ep_square
+        copy.halfmove_clock = self.halfmove_clock
+        copy.fullmove_number = self.fullmove_number
         copy.prefixes = self.prefixes
 
         return copy
@@ -70,6 +74,14 @@ class Game:
         return result + "\n" + self.status
 
     def placePiece(self, y, x, targetY, targetX, note = None):
+        if(type(self.board[y][x]) == Pawn or self.board[targetY][targetX] != None):
+            self.halfmove_clock = 0
+        else:
+            self.halfmove_clock += 1
+        
+        if(not self.whiteToMove):
+            self.fullmove_number += 1
+        
         self.board[y][x].placeAt(targetY, targetX)
         self.board[targetY][targetX] = self.board[y][x]
         self.board[y][x] = None
@@ -180,5 +192,65 @@ class Game:
             return "White wins - Checkmate"
         return "Draw - Stalemate"
 
-    def getFEN(forThreefold = False):
-        return ""
+    def getFEN(self, forThreefold = False):
+        fen = ""
+
+        #piece placement
+        for rank in self.board:
+            row = ""
+            number = 0
+            for piece in rank:
+                if(piece == None):
+                    number += 1
+                else:
+                    if(number > 0):
+                        row += str(number)
+                        number = 0
+                    row += str(piece)
+            
+            if(number > 0):
+                row += str(number)
+                number = 0
+            fen = row + "/" + fen
+
+        #active color
+        if(self.whiteToMove):
+            fen += " w"
+        else:
+            fen += " b"
+        
+        #castling availability
+        castles = " "
+        
+        if(self.board[0][4] != None and not self.board[0][4].hasMoved):
+            if(self.board[0][7] != None and not self.board[0][7].hasMoved):
+                castles += "K"
+            if(self.board[0][0] != None and not self.board[0][0].hasMoved):
+                castles += "Q"
+
+        if(self.board[7][4] != None and not self.board[7][4].hasMoved):
+            if(self.board[7][7] != None and not self.board[7][7].hasMoved):
+                castles += "k"
+            if(self.board[7][0] != None and not self.board[7][0].hasMoved):
+                castles += "q"
+        
+        if(castles == " "):
+            castles = " -"
+        fen += castles
+
+        #en passant target square
+        if(self.ep_square == None):
+            fen += " -"
+        else:        
+            fen += ' ' + chr(self.ep_square[1] + 97) + chr(self.ep_square[0] + 49)
+
+        if(forThreefold):
+            return fen
+        
+        #halfmove clock
+        fen += " " + str(self.halfmove_clock)
+
+        #fullmove number
+        fen += " " + str(self.fullmove_number)
+        
+        return fen
