@@ -5,7 +5,7 @@ Currently working on implementing chess in Python. To do:
 
     Insufficient Material
     
-    Test 50 Move Rule
+    Test 50/75 Move Rule
 
     More cleanup(make more helper functions)
     

@@ -38,10 +38,19 @@ class Game:
         mate = self.isMate()
         if(mate):
             self.status = mate
+            return
+        elif(self.repetitions[fen] >= 5):
+            self.status = "Draw - fivefold repetition"
+            return
+        elif(self.halfmove_clock >= 150):
+            self.status += "Draw - 75 move rule"
+            return
+
         elif(self.whiteToMove):
             self.status = "White to play"
         else:
             self.status = "Black to play"
+
         if(self.repetitions[fen] >= 3):
             self.status += " - Threefold repetition may be claimed"
         if(self.halfmove_clock >= 100):
@@ -120,7 +129,8 @@ class Game:
                             self.ep_square = (5, x)
 
     def move(self, y, x, targetY, targetX, note, checkingForMate = False):
-        if(self.board[y][x] == None
+        if(self.status[:13] not in ("White to play", "Black to play")
+           or self.board[y][x] == None
            or self.board[y][x].isWhite != self.whiteToMove
            or (targetY, targetX, note) not in self.board[y][x].listMoves(self)):
             return False
