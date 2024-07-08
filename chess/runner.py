@@ -5,7 +5,7 @@ while(True):
     moved = False
     print(game)
 
-    if(game.status not in ("White to play", "Black to play")):
+    if(game.status[:13] not in ("White to play", "Black to play")):
         break
 
     move = input()

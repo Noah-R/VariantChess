@@ -14,6 +14,7 @@ class Game:
         self.ep_square = None
         self.halfmove_clock = 0
         self.fullmove_number = 1
+        self.repetitions = {}
         self.board = []
         for r in range(8):
             self.board.append([])
@@ -33,7 +34,7 @@ class Game:
         
             self. prefixes = {"N": Knight, "B": Bishop, "R": Rook, "Q": Queen, "K": King, "P": Pawn}
     
-    def checkStatus(self):
+    def checkStatus(self, fen):
         mate = self.isMate()
         if(mate):
             self.status = mate
@@ -41,6 +42,10 @@ class Game:
             self.status = "White to play"
         else:
             self.status = "Black to play"
+        if(self.repetitions[fen] >= 3):
+            self.status += " - Threefold repetition may be claimed"
+        if(self.halfmove_clock >= 100):
+            self.status += " - 50 move rule may be claimed"
     
     def copy(self):
         copy = Game()
@@ -56,6 +61,7 @@ class Game:
         copy.ep_square = self.ep_square
         copy.halfmove_clock = self.halfmove_clock
         copy.fullmove_number = self.fullmove_number
+        copy.repetitions = self.repetitions
         copy.prefixes = self.prefixes
 
         return copy
@@ -76,6 +82,7 @@ class Game:
     def placePiece(self, y, x, targetY, targetX, note = None):
         if(type(self.board[y][x]) == Pawn or self.board[targetY][targetX] != None):
             self.halfmove_clock = 0
+            self.repetitions = {}
         else:
             self.halfmove_clock += 1
         
@@ -145,7 +152,9 @@ class Game:
             self.placePiece(y, rookSpot, targetY, targetX - direction)
             self.whiteToMove = not self.whiteToMove
             if(not checkingForMate):
-                self.checkStatus()
+                fen = self.getFEN(forThreefold = True)
+                self.repetitions[fen] = self.repetitions.get(fen, 0) + 1
+                self.checkStatus(fen)
             return True
 
         else:
@@ -157,7 +166,9 @@ class Game:
             self.placePiece(y, x, targetY, targetX, note)
             self.whiteToMove = not self.whiteToMove
             if(not checkingForMate):
-                self.checkStatus()
+                fen = self.getFEN(forThreefold = True)
+                self.repetitions[fen] = self.repetitions.get(fen, 0) + 1
+                self.checkStatus(fen)
             return True
 
     def inCheck(self):

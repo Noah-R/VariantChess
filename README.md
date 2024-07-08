@@ -2,12 +2,12 @@
 A chess server for variants invented by me. Under active development.
 
 Currently working on implementing chess in Python. To do:
-    
-    Threefold Repetition
 
     Insufficient Material
     
-    50 Move Rule
+    Test 50 Move Rule
+
+    More cleanup(make more helper functions)
     
 Room for expansion:
 
