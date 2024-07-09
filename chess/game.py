@@ -31,13 +31,16 @@ class Game:
             if(pieces[f] == King):
                 self.whiteKing = self.board[0][-1]
                 self.blackKing = self.board[7][-1]
-        
-            self. prefixes = {"N": Knight, "B": Bishop, "R": Rook, "Q": Queen, "K": King, "P": Pawn}
+
+        self. prefixes = {"N": Knight, "B": Bishop, "R": Rook, "Q": Queen, "K": King, "P": Pawn}
     
     def checkStatus(self, fen):
         mate = self.isMate()
         if(mate):
             self.status = mate
+            return
+        if(self.isInsufficientMaterial()):
+            self.status = "Draw - Insufficient material"
             return
         elif(self.repetitions[fen] >= 5):
             self.status = "Draw - fivefold repetition"
@@ -275,3 +278,31 @@ class Game:
         fen += " " + str(self.fullmove_number)
         
         return fen
+    
+    def isInsufficientMaterial(self):
+        foundKnight = False
+        foundLSB = False
+        foundDSB = False
+
+        for rank in self.board:
+            for piece in rank:
+                if(piece != None):
+                    if(type(piece) in [Rook, Queen, Pawn]):
+                        return False
+                    
+                    if(type(piece) == Knight):
+                        if(foundKnight or foundLSB or foundDSB):
+                            return False
+                        foundKnight = True
+                    
+                    elif(type(piece) == Bishop and piece.lightSquare):
+                        if(foundDSB or foundKnight):
+                            return False
+                        foundLSB = True
+        
+                    elif(type(piece) == Bishop and not piece.lightSquare):
+                        if(foundLSB or foundKnight):
+                            return False
+                        foundDSB = True
+        
+        return True

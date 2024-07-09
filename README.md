@@ -3,7 +3,10 @@ A chess server for variants invented by me. Under active development.
 
 Currently working on implementing chess in Python. To do:
 
-    Insufficient Material
+    Test Insufficient Material
+        KvK
+        KBvK KNvK
+        KBvKB same color
     
     Test 50/75 Move Rule
 
