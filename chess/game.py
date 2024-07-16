@@ -216,7 +216,7 @@ class Game:
             return "White wins - Checkmate"
         return "Draw - Stalemate"
 
-    def getFEN(self, forThreefold = False):
+    def getFEN(self, piecesOnly = False, forThreefold = False):
         fen = ""
 
         #piece placement
@@ -236,6 +236,8 @@ class Game:
                 row += str(number)
                 number = 0
             fen = row + "/" + fen
+        if(piecesOnly):
+            return fen
 
         #active color
         if(self.whiteToMove):
