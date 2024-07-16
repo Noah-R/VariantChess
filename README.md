@@ -1,18 +1,9 @@
 # VariantChess
 A chess server for variants invented by me. Under active development.
 
-Currently working on implementing chess in Python. To do:
-
-    Test Insufficient Material
-        KvK
-        KBvK KNvK
-        KBvKB same color
-    
-    Test 50/75 Move Rule
-
-    More cleanup(make more helper functions)
-    
 Room for expansion:
+
+    Clean up with more helper functions in chess logic
 
     Formalize notation-based moving(currently runner.py uses an incomplete implementation as a temporary interface)
 
