@@ -91,7 +91,7 @@ class Game:
             result = row + result
         return result + "\n" + self.status
 
-    def placePiece(self, y, x, targetY, targetX, note = None):
+    def placePiece(self, y, x, targetY, targetX, note = ""):
         if(type(self.board[y][x]) == Pawn or self.board[targetY][targetX] != None):
             self.halfmove_clock = 0
             self.repetitions = {}
@@ -105,17 +105,19 @@ class Game:
         self.board[targetY][targetX] = self.board[y][x]
         self.board[y][x] = None
 
-        if(note in self.prefixes and not note == "K"):
+        if(note in ["N", "B", "R", "Q"]):
             self.board[targetY][targetX] = self.board[targetY][targetX].promote(self.prefixes[note])
         
-        self.ep_square = None
-        if(note == "ep"):
-            if(targetY == 2):
-                self.board[3][targetX] = None
-            elif(targetY == 5):
-                self.board[4][targetX] = None
+        if(type(self.board[targetY][targetX]) == Pawn):
+            if(self.ep_square == (targetY, targetX)):        
+                self.ep_square = None
+                if(targetY == 2):
+                    self.board[3][targetX] = None
+                elif(targetY == 5):
+                    self.board[4][targetX] = None
             
-            else:
+            elif(abs(y - targetY) == 2):        
+                self.ep_square = None
                 if(targetX > 0):
                     ep_pawn = self.board[targetY][targetX-1]
                     if(ep_pawn != None and type(ep_pawn) == Pawn and ep_pawn.isWhite != self.board[targetY][targetX].isWhite):
@@ -130,8 +132,14 @@ class Game:
                             self.ep_square = (2, x)
                         if(targetY == 4):
                             self.ep_square = (5, x)
+            
+            else:            
+                self.ep_square = None
+        
+        else:
+            self.ep_square = None
 
-    def move(self, y, x, targetY, targetX, note, checkingForMate = False):
+    def move(self, y, x, targetY, targetX, note = "", checkingForMate = False):
         if(self.status[:13] not in ("White to play", "Black to play")
            or self.board[y][x] == None
            or self.board[y][x].isWhite != self.whiteToMove
@@ -140,11 +148,11 @@ class Game:
         
         testBoard = self.copy()
 
-        if(note in ["O-O", "O-O-O"]):
+        if(type(self.board[y][x]) == King and abs(targetX - x) == 2):
             if(testBoard.inCheck()):
                 return False
             
-            if(note == "O-O"):
+            if(targetX > x):
                 direction = 1
                 rookSpot = 7
             else:

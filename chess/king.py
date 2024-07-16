@@ -22,7 +22,7 @@ class King(Piece):
                     options.append((y, x, ""))
         
         if(not self.hasMoved):
-            castles = [{"direction": 1, "rook": 7, "kingSpot": 6, "notation": "O-O"}, {"direction": -1, "rook": 0, "kingSpot": 2, "notation": "O-O-O"}]
+            castles = [{"direction": 1, "rook": 7, "kingSpot": 6}, {"direction": -1, "rook": 0, "kingSpot": 2}]
             for castle in castles:
                 canCastle = True
                 
@@ -36,6 +36,6 @@ class King(Piece):
                     canCastle = False
 
                 if(canCastle):
-                    options.append((self.y, castle["kingSpot"], castle["notation"]))
+                    options.append((self.y, castle["kingSpot"], ""))
             
         return options

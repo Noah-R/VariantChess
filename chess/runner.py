@@ -15,15 +15,15 @@ while(True):
 
     elif(move == "O-O"):
         if(game.whiteToMove):
-            game.move(game.whiteKing.y, game.whiteKing.x, 0, 6, move)
+            game.move(game.whiteKing.y, game.whiteKing.x, 0, 6)
         else:
-            game.move(game.blackKing.y, game.blackKing.x, 7, 6, move)
+            game.move(game.blackKing.y, game.blackKing.x, 7, 6)
 
     elif(move == "O-O-O"):
         if(game.whiteToMove):
-            game.move(game.whiteKing.y, game.whiteKing.x, 0, 2, move)
+            game.move(game.whiteKing.y, game.whiteKing.x, 0, 2)
         else:
-            game.move(game.blackKing.y, game.blackKing.x, 7, 2, move)
+            game.move(game.blackKing.y, game.blackKing.x, 7, 2)
     
     else:
         for char in "x+#!?":
@@ -54,5 +54,5 @@ while(True):
                     and spot.isWhite == game.whiteToMove
                     and type(spot) == piece
                     and (len(move) == 0 or ord(move) - 49 == spot.y or ord(move) - 97 == spot.x)):
-                    if(game.move(spot.y, spot.x, targetY, targetX, note) or game.move(spot.y, spot.x, targetY, targetX, "ep")):
+                    if(game.move(spot.y, spot.x, targetY, targetX, note = note)):
                         moved = True

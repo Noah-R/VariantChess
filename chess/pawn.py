@@ -33,7 +33,7 @@ class Pawn(Piece):
                 y += direction
                 square = game.board[y][x]
                 if(square == None):
-                    options.append((y, x, "ep"))
+                    options.append((y, x, ""))
         
         y = self.y + direction
         for x in [self.x + 1, self.x-1]:
@@ -49,6 +49,6 @@ class Pawn(Piece):
                         options.append((y, x, ""))
                 
                 elif(game.ep_square == (y, x)):
-                    options.append((y, x, "ep"))
+                    options.append((y, x, ""))
 
         return options
