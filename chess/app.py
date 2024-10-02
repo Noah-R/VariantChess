@@ -11,7 +11,7 @@ game = Game()
 
 @app.route("/<string:move>")
 @cross_origin()
-def get_position(move = "a1a1x"):
+def get_position(move = "a1a1"):
 	x = ord(move[0]) - 97
 	y = ord(move[1]) - 49
 	targetX = ord(move[2]) - 97
