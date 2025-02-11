@@ -2,10 +2,6 @@ import { createRoot } from "react-dom/client";
 import React, { useState, useEffect } from "react";
 import { io } from "socket.io-client";
 import { Chessboard } from "react-chessboard";
-import {
-	PromotionPieceOption,
-	Square,
-} from "react-chessboard/dist/chessboard/types";
 
 const socket = io();
 
