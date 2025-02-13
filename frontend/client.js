@@ -42,8 +42,8 @@ function App() {
 	}, []);
 
 	function onDrop(sourceSquare, targetSquare, piece, promote = false) {
-		let send = sourceSquare + targetSquare
-		if(promote){
+		let send = sourceSquare + targetSquare;
+		if (promote) {
 			send += piece;
 		}
 		socket.emit("move", send);
@@ -55,13 +55,17 @@ function App() {
 	}
 
 	return (
-		<Chessboard
-			id="Board"
-			position={position}
-			onPieceDrop={onDrop}
-			onPromotionPieceSelect={onPromote}
-			boardWidth={600}
-		/>
+		<div>
+			<button onClick={() => {socket.emit("setColor", "white")}}>White</button>
+			<button onClick={() => {socket.emit("setColor", "black")}}>Black</button>
+			<Chessboard
+				id="Board"
+				position={position}
+				onPieceDrop={onDrop}
+				onPromotionPieceSelect={onPromote}
+				boardWidth={600}
+			/>
+		</div>
 	);
 }
 
