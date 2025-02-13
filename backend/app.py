@@ -29,7 +29,9 @@ def move(sid, data):
 	if(len(data) == 4):
 		game.move(y, x, targetY, targetX, "")
 	else:
-		game.move(y, x, targetY, targetX, data[4])
+		game.move(y, x, targetY, targetX, data[5])
+	
+	sio.emit("position", game.getFEN())
 
 if __name__ == '__main__':
 	eventlet.wsgi.server(eventlet.listen(('', 5000)), app)

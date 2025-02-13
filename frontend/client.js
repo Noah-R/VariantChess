@@ -41,11 +41,16 @@ function App() {
 		};
 	}, []);
 
-	function onDrop(sourceSquare = "", targetSquare = "", piece = "", promote = false) {
-
+	function onDrop(sourceSquare, targetSquare, piece, promote = false) {
+		let send = sourceSquare + targetSquare
+		if(promote){
+			send += piece;
+		}
+		socket.emit("move", send);
+		return true;
 	}
 
-	function onPromote(piece = "wQ", promoteFromSquare = "a7", promoteToSquare = "a8") {
+	function onPromote(piece, promoteFromSquare, promoteToSquare) {
 		return onDrop(promoteFromSquare, promoteToSquare, piece, true);
 	}
 

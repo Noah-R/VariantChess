@@ -244,6 +244,7 @@ class Game:
                 row += str(number)
                 number = 0
             fen = row + "/" + fen
+        fen = fen[:-1]
         if(piecesOnly):
             return fen
 
