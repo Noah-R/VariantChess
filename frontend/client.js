@@ -7,7 +7,9 @@ const socket = io();
 
 function App() {
 	const [isConnected, setIsConnected] = useState(socket.connected);
+	const [color, setColor] = useState("white");
 	const [position, setPosition] = useState("start");
+	const [status, setStatus] = useState("White to play");
 
 	useEffect(() => {
 		function onConnect() {
@@ -24,6 +26,10 @@ function App() {
 			setPosition(data);
 		}
 
+		function onStatus(data) {
+			setStatus(data);
+		}
+
 		function onMessage(data) {
 			console.log("Received: " + data);
 		}
@@ -31,6 +37,7 @@ function App() {
 		socket.on("connect", onConnect);
 		socket.on("disconnect", onDisconnect);
 		socket.on("position", onPosition);
+		socket.on("status", onStatus);
 		socket.on("message", onMessage);
 
 		return () => {
@@ -41,6 +48,11 @@ function App() {
 		};
 	}, []);
 
+	function selectColor(color){
+		socket.emit("setColor", color);
+		setColor(color);
+	}
+	
 	function onDrop(sourceSquare, targetSquare, piece, promote = false) {
 		let send = sourceSquare + targetSquare;
 		if (promote) {
@@ -56,15 +68,17 @@ function App() {
 
 	return (
 		<div>
-			<button onClick={() => {socket.emit("setColor", "white")}}>White</button>
-			<button onClick={() => {socket.emit("setColor", "black")}}>Black</button>
+			<button onClick={() => {selectColor("white")}}>White</button>
+			<button onClick={() => {selectColor("black")}}>Black</button>
 			<Chessboard
 				id="Board"
 				position={position}
 				onPieceDrop={onDrop}
 				onPromotionPieceSelect={onPromote}
 				boardWidth={600}
+				boardOrientation={color == "black" ? "black" : "white"}
 			/>
+			<h1>{status}</h1>
 		</div>
 	);
 }

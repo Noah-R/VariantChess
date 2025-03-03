@@ -44,6 +44,7 @@ def move(sid, data):
 		games[players[sid]]["game"].move(y, x, targetY, targetX, data[5])
 	
 	sio.emit("position", games[players[sid]]["game"].getFEN())
+	sio.emit("status", games[players[sid]]["game"].status)
 
 if __name__ == '__main__':
 	eventlet.wsgi.server(eventlet.listen(('', 5000)), app)
