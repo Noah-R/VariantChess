@@ -8,8 +8,9 @@ const socket = io();
 function App() {
 	const [isConnected, setIsConnected] = useState(socket.connected);
 	const [color, setColor] = useState("white");
+	const [room, setRoom] = useState("");
 	const [position, setPosition] = useState("start");
-	const [status, setStatus] = useState("White to play");
+	const [status, setStatus] = useState("Not yet connected");
 
 	useEffect(() => {
 		function onConnect() {
@@ -48,10 +49,15 @@ function App() {
 		};
 	}, []);
 
-	function selectColor(color){
-		socket.emit("setColor", color);
+	function join(room, color){
+		socket.emit("join", [room, color]);
 		setColor(color);
 	}
+
+	const handleRoomChange = (event) => {
+		setRoom(event.target.value);
+	};
+
 	
 	function onDrop(sourceSquare, targetSquare, piece, promote = false) {
 		let send = sourceSquare + targetSquare;
@@ -68,8 +74,15 @@ function App() {
 
 	return (
 		<div>
-			<button onClick={() => {selectColor("white")}}>White</button>
-			<button onClick={() => {selectColor("black")}}>Black</button>
+			<input
+				value={room}
+				onChange={handleRoomChange}
+				placeholder="Enter Room"
+				maxlength="32"
+			>
+			</input>
+			<button onClick={() => {join(room, "white")}}>White</button>
+			<button onClick={() => {join(room, "black")}}>Black</button>
 			<Chessboard
 				id="Board"
 				position={position}

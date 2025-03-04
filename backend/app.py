@@ -2,8 +2,8 @@ import socketio
 import eventlet
 from game import Game
 
-games = {"only": {"game": Game(), "white": "", "black": ""}}
-players = {}
+games = {} #game name: {game: game object, white: white's sid, black: black's sid}
+players = {} #sid: game name
 
 sio = socketio.Server()
 app = socketio.WSGIApp(sio, static_files={
@@ -15,19 +15,26 @@ app = socketio.WSGIApp(sio, static_files={
 @sio.event
 def connect(sid, environ):
 	print(sid, "connected")
-	players[sid] = "only"
-	sio.emit("position", games[players[sid]]["game"].getFEN())
+	players[sid] = ""
 
 @sio.event
 def disconnect(sid):
 	print(sid, "disconnected")
 
 @sio.event
-def setColor(sid, color):
-	if(color == "white"):
-		games[players[sid]]["white"] = sid
-	elif(color == "black"):
-		games[players[sid]]["black"] = sid
+def join(sid, data):
+	room = "#" + data[0][:32]
+	color = data[1]
+
+	if(players[sid] == ""):
+		if(room not in games):
+			games[room] = {"game": Game(), "white": "", "black": ""}
+		
+		if(games[room][color] == ""):
+			games[room][color] = sid
+			players[sid] = room
+			sio.emit("position", games[room]["game"].getFEN(), to=[games[players[sid]]["white"], games[players[sid]]["black"]])
+			sio.emit("status", games[room]["game"].status, to=[games[players[sid]]["white"], games[players[sid]]["black"]])
 
 @sio.event
 def move(sid, data):
@@ -43,8 +50,8 @@ def move(sid, data):
 	else:
 		games[players[sid]]["game"].move(y, x, targetY, targetX, data[5])
 	
-	sio.emit("position", games[players[sid]]["game"].getFEN())
-	sio.emit("status", games[players[sid]]["game"].status)
+	sio.emit("position", games[players[sid]]["game"].getFEN(), to=[games[players[sid]]["white"], games[players[sid]]["black"]])
+	sio.emit("status", games[players[sid]]["game"].status, to=[games[players[sid]]["white"], games[players[sid]]["black"]])
 
 if __name__ == '__main__':
 	eventlet.wsgi.server(eventlet.listen(('', 5000)), app)
